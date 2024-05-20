@@ -12,10 +12,7 @@ class PostController extends Controller
     {
         $post = Post::all();
 
-        return response()->json([
-            'status' => 200,
-            'data' => $post
-        ]);
+        return response()->json($post,200);
     }
 
     function index(Request $request)
@@ -32,9 +29,6 @@ class PostController extends Controller
 
         $post->save();
 
-        return response()->json([
-            'status' => 201,
-            'data' => $post
-        ]);
+        return response()->json($post,201);
     }
 }

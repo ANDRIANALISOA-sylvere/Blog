@@ -14,7 +14,7 @@ class PostController extends Controller
 {
     function show()
     {
-        $post = Post::with('categories')->get();
+        $post = Post::with(['categories','tags'])->get();
 
         return response()->json($post, 200);
     }

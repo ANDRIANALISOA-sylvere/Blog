@@ -10,7 +10,7 @@ class CommentController extends Controller
 {
     public function show()
     {
-        $comment = Comment::all();
+        $comment = Comment::with(['user','post'])->get();
 
         return response()->json($comment, 200);
     }

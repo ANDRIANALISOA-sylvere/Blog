@@ -24,7 +24,7 @@ class PostController extends Controller
         $post = new Post();
 
         $post->title = $request->title;
-        $post->slug = Str::slug($request->slug);
+        $post->slug = Str::slug($request->title);
         $post->content = $request->content;
         $post->featured_image = $request->featured_image;
         $post->status = $request->status;

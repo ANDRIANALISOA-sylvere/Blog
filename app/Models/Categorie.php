@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Model
 {
-    use HasFactory;
+    protected $fillable = ["name","slug"];
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class, 'post_categories');
+    }
 }

@@ -10,7 +10,7 @@ class CategorieController extends Controller
 {
     function show()
     {
-        $categorie = Categorie::all();
+        $categorie = Categorie::with('posts')->get();
 
         return response()->json($categorie, 200);
     }

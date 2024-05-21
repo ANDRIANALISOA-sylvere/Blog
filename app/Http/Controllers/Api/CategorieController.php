@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 
 class CategorieController extends Controller
 {
-    function show()
+    function getAllCategories()
     {
         $categorie = Categorie::with('posts')->get();
 
         return response()->json($categorie, 200);
     }
 
-    function index(Request $request)
+    function createCategorie(Request $request)
     {
         $categorie = new Categorie();
 

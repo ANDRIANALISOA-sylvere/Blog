@@ -18,17 +18,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get("post", [PostController::class, 'show']);
-Route::post("post", [PostController::class, 'index']);
+//POST
+Route::get("posts", [PostController::class, 'getAllPosts']);
+Route::get("posts/{post}", [PostController::class, 'getPostById']);
+Route::post("posts", [PostController::class, 'createPost']);
+Route::put("posts/{post}",[PostController::class,'updatePost']);
+Route::delete("posts/{post}",[PostController::class,'deletePost']);
 
-Route::get("comment", [CommentController::class, 'show']);
-Route::post("comment", [CommentController::class, 'index']);
+//COMMENT
+Route::get("comments", [CommentController::class, 'getAllComments']);
+Route::post("comments", [CommentController::class, 'createComment']);
 
-Route::get("categorie",[CategorieController::class,'show']);
-Route::post("categorie",[CategorieController::class,'index']);
+//CATEGORIE
+Route::get("categories",[CategorieController::class,'getAllCategories']);
+Route::post("categories",[CategorieController::class,'createCategorie']);
 
-Route::get("tag",[TagController::class,'show']);
-Route::post("tag",[TagController::class,'index']);
+//TAG
+Route::get("tags",[TagController::class,'getAllTags']);
+Route::post("tags",[TagController::class,'createTag']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    function show()
+    function getAllTags()
     {
         $tag = Tag::with('posts')->get();
 
         return response()->json($tag, 200);
     }
 
-    function index(Request $request)
+    function createTag(Request $request)
     {
         $tag = new Tag();
 

@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function show()
+    public function getAllComments()
     {
         $comment = Comment::with(['user','post'])->get();
 
         return response()->json($comment, 200);
     }
 
-    public function index(Request $request)
+    public function createComment(Request $request)
     {
         $comment = new Comment();
 

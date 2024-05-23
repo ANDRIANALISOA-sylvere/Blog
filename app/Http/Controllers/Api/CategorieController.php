@@ -7,10 +7,16 @@ use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-// Contrôleur pour la gestion des catégories
+/**
+ * Contrôleur pour la gestion des catégories
+ */
 class CategorieController extends Controller
 {
-    // Récupère toutes les catégories avec leurs posts associés
+    /**
+     * Récupère toutes les catégories avec leurs posts associés
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllCategories()
     {
         try {
@@ -21,7 +27,12 @@ class CategorieController extends Controller
         }
     }
 
-    // Crée une nouvelle catégorie avec validation des données
+    /**
+     * Crée une nouvelle catégorie avec validation des données
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createCategorie(Request $request)
     {
         $validatedData = $request->validate([
@@ -39,7 +50,12 @@ class CategorieController extends Controller
         }
     }
 
-    // Récupère une catégorie par son ID avec ses posts associés
+    /**
+     * Récupère une catégorie par son ID avec ses posts associés
+     *
+     * @param Categorie $categorie
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCategorieById(Categorie $categorie)
     {
         try {
@@ -49,7 +65,13 @@ class CategorieController extends Controller
         }
     }
 
-    // Met à jour une catégorie existante avec validation des données
+    /**
+     * Met à jour une catégorie existante avec validation des données
+     *
+     * @param Categorie $categorie
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateCategorie(Categorie $categorie, Request $request)
     {
         $validatedData = $request->validate([
@@ -68,7 +90,12 @@ class CategorieController extends Controller
         }
     }
 
-    // Supprime une catégorie et renvoie un message de succès
+    /**
+     * Supprime une catégorie et renvoie un message de succès
+     *
+     * @param Categorie $categorie
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteCategorie(Categorie $categorie)
     {
         try {

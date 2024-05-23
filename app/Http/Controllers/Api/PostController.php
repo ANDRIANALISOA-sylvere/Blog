@@ -11,7 +11,11 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    // Récupère tous les posts avec leurs catégories, tags et utilisateur associés
+    /**
+     * Récupère tous les posts avec leurs catégories, tags et utilisateur associés
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllPosts()
     {
         try {
@@ -23,7 +27,12 @@ class PostController extends Controller
         }
     }
 
-    // Crée un nouveau post avec validation des données
+    /**
+     * Crée un nouveau post avec validation des données
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     function createPost(Request $request)
     {
         $post = new Post();
@@ -83,7 +92,12 @@ class PostController extends Controller
         }
     }
 
-    // Récupère un post par son ID avec ses catégories, tags et utilisateur associés
+    /**
+     * Récupère un post par son ID avec ses catégories, tags et utilisateur associés
+     *
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPostById(Post $post)
     {
         try {
@@ -94,7 +108,13 @@ class PostController extends Controller
         }
     }
 
-    // Met à jour un post existant avec validation des données
+    /**
+     * Met à jour un post existant avec validation des données
+     *
+     * @param \App\Models\Post $post
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updatePost(Post $post, Request $request)
     {
         // Validation des données requises pour la mise à jour d'un post
@@ -150,7 +170,12 @@ class PostController extends Controller
         }
     }
 
-    // Supprime un post et renvoie un message de succès
+    /**
+     * Supprime un post et renvoie un message de succès
+     *
+     * @param \App\Models\Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deletePost(Post $post)
     {
         try {

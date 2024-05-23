@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -89,6 +90,37 @@ class CategorieController extends Controller
             return response()->json(['error' => 'La mise à jour de la catégorie a échoué', 'details' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Récupère tous les posts d'une catégorie spécifique
+     *
+     * @param Categorie $categorie
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCategoryPosts(Categorie $categorie)
+    {
+        try {
+            return response()->json($categorie->load('posts'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des posts de la catégorie', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Récupére les catégories d'un post spécifique
+     *
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPostCategories(Post $post)
+    {
+        try {
+            return response()->json($post->load('categories'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des catégories du post', 'details' => $e->getMessage()], 500);
+        }
+    }
+
 
     /**
      * Supprime une catégorie et renvoie un message de succès

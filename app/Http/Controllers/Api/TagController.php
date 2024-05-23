@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -88,6 +89,37 @@ class TagController extends Controller
     }
 
     /**
+     * Récupère les posts associés à un tag spécifique.
+     *
+     * @param Tag $tag
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTagPosts(Tag $tag)
+    {
+        try {
+            return response()->json($tag->load('posts'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des posts du tag', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Récupere les tags d'un post spécifique
+     *
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function getPostTags(Post $post)
+    {
+        try {
+            return response()->json($post->load('tags'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des tags du post', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Supprime un tag et renvoie un message de succès.
      *
      * @param Tag $tag
@@ -103,4 +135,3 @@ class TagController extends Controller
         }
     }
 }
-

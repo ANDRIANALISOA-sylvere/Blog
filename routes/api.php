@@ -21,9 +21,10 @@ use Illuminate\Support\Facades\Route;
 
 // Routes pour le AuthController
 Route::controller(AuthController::class)->group(function () {
-    Route::post("register", 'registration');
-    Route::post("login", 'connexion');
-    Route::post("logout", 'deconnexion');
+    Route::post("register", 'register');
+    Route::post("login", 'login');
+    Route::post("logout", 'logout');
+    Route::post('refresh', 'refresh');
 });
 
 // Routes pour le CategorieController

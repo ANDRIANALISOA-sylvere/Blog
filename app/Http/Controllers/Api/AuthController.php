@@ -1,54 +1,90 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function registration(Request $request)
+    public function __construct()
     {
-        $validateData = $request->validate([
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+        $credentials = $request->only('email', 'password');
+        $token = Auth::attempt($credentials);
+
+        if (!$token) {
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        $user = Auth::user();
+        return response()->json([
+            'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:10',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
         ]);
 
-        try {
-            $user = User::create([
-                'name' => $validateData['name'],
-                'email' => $validateData['email'],
-                'password' => Hash::make($validateData['password'])
-            ]);
-
-            $token = auth()->attempt($request->only('email', 'password'));
-
-            return response()->json(['token' => $token, 'user' => $user]);
-        } catch (\Throwable $th) {
-            return response()->json(['erreur' => "Une erreur s'est produite lors de la création du compte", 'details' => $th->getMessage()]);
-        }
-    }
-
-    public function connnexion(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string'
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        $token = Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
     }
 
-    public function deconnexion()
+    public function logout()
     {
-        auth()->logout();
-        return response()->json(['message' => "L'utilisateur a été déconnecté avec succès"]);
+        Auth::logout();
+        return response()->json([
+            'message' => 'Successfully logged out',
+        ]);
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
     }
 }

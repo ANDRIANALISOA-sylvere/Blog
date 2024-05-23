@@ -17,20 +17,6 @@ return [
         'passwords' => 'users',
     ],
 
-
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'api' => [
-                'driver' => 'jwt',
-                'provider' => 'users',
-        ],
-
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -48,7 +34,13 @@ return [
     |
     */
 
+
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',

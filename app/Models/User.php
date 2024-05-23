@@ -43,16 +43,6 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime'
     ];
 
-    /**
-     * Obtient les posts associés à l'utilisateur.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
-
     // Get the identifier that will be stored in the subject claim of the JWT.
     public function getJWTIdentifier()
     {
@@ -63,5 +53,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Obtient les posts associés à l'utilisateur.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

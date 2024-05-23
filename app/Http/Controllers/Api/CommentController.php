@@ -12,13 +12,13 @@ class CommentController extends Controller
 
     public function createComment(Request $request)
     {
-        $comment = new Comment();
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+            'post_id' => 'required|integer|exists:posts,id',
+            'user_id' => 'required|integer|exists:users,id'
+        ]);
 
-        $comment->content = $request->content;
-        $comment->post_id = $request->post_id;
-        $comment->user_id = $request->user_id;
-
-        $comment->save();
+        $comment = Comment::create($validatedData);
 
         return response()->json($comment->load(['user', 'post']), 201);
     }

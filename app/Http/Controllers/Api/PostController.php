@@ -12,11 +12,11 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    function getAllPosts()
+    public function getAllPosts()
     {
-        $post = Post::with(['categories', 'tags', 'user'])->get();
+        $posts = Post::with(['categories', 'tags', 'user'])->get();
 
-        return response()->json($post, 200);
+        return response()->json($posts, 200);
     }
 
     function createPost(Request $request)
@@ -69,7 +69,7 @@ class PostController extends Controller
 
     public function getPostById(Post $post)
     {
-        return response()->json($post->load(['categories', 'tags', 'user']), 200);
+        return response()->json($post->load(['categories', 'tags', 'user']));
     }
 
     public function updatePost(Post $post, Request $request)
@@ -120,8 +120,11 @@ class PostController extends Controller
 
     public function deletePost(Post $post)
     {
-        $post->delete();
-
-        return response()->json(["message" => "Post supprimé avec succès"]);
+        try {
+            $post->delete();
+            return response()->json(["message" => "Post supprimé avec succès"], 200);
+        } catch (\Exception $e) {
+            return response()->json(["error" => "Erreur lors de la suppression du post", "details" => $e->getMessage()], 500);
+        }
     }
 }

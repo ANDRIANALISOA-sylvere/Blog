@@ -107,22 +107,6 @@ class CategorieController extends Controller
     }
 
     /**
-     * Récupére les catégories d'un post spécifique
-     *
-     * @param Post $post
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPostCategories(Post $post)
-    {
-        try {
-            return response()->json($post->load('categories'), 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Erreur lors de la récupération des catégories du post', 'details' => $e->getMessage()], 500);
-        }
-    }
-
-
-    /**
      * Supprime une catégorie et renvoie un message de succès
      *
      * @param Categorie $categorie

@@ -104,22 +104,6 @@ class TagController extends Controller
     }
 
     /**
-     * Récupere les tags d'un post spécifique
-     *
-     * @param Post $post
-     * @return \Illuminate\Http\JsonResponse
-     */
-
-    public function getPostTags(Post $post)
-    {
-        try {
-            return response()->json($post->load('tags'), 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Erreur lors de la récupération des tags du post', 'details' => $e->getMessage()], 500);
-        }
-    }
-
-    /**
      * Supprime un tag et renvoie un message de succès.
      *
      * @param Tag $tag

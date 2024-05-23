@@ -108,6 +108,37 @@ class PostController extends Controller
         }
     }
 
+     /**
+     * Récupére les catégories d'un post spécifique
+     *
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPostCategories(Post $post)
+    {
+        try {
+            return response()->json($post->load('categories'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des catégories du post', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Récupere les tags d'un post spécifique
+     *
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+     public function getPostTags(Post $post)
+     {
+         try {
+             return response()->json($post->load('tags'), 200);
+         } catch (\Exception $e) {
+             return response()->json(['error' => 'Erreur lors de la récupération des tags du post', 'details' => $e->getMessage()], 500);
+         }
+     }
+
     /**
      * Met à jour un post existant avec validation des données
      *

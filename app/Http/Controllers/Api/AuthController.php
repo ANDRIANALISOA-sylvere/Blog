@@ -8,6 +8,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @OA\Tag(
+ *     name="Authentification",
+ *     description="Opérations d'authentification pour les utilisateurs"
+ * )
+ */
+
 // Contrôleur pour l'authentification des utilisateurs
 class AuthController extends Controller
 {
@@ -18,10 +25,39 @@ class AuthController extends Controller
     }
 
     /**
-     * Méthode pour la connexion des utilisateurs
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/login",
+     *     operationId="loginUser",
+     *     tags={"Authentification"},
+     *     summary="Connexion des utilisateurs",
+     *     description="Authentifie un utilisateur et renvoie un token JWT.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données de connexion de l'utilisateur",
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+     *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Connexion réussie",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *             @OA\Property(
+     *                 property="authorization",
+     *                 type="object",
+     *                 @OA\Property(property="token", type="string", description="Token JWT"),
+     *                 @OA\Property(property="type", type="string", description="Type de token")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non autorisé"
+     *     )
+     * )
      */
     public function login(Request $request)
     {
@@ -52,10 +88,37 @@ class AuthController extends Controller
     }
 
     /**
-     * Méthode pour l'enregistrement des utilisateurs
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/register",
+     *     operationId="registerUser",
+     *     tags={"Authentification"},
+     *     summary="Enregistrement des utilisateurs",
+     *     description="Enregistre un nouvel utilisateur et renvoie un token JWT.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données de l'utilisateur à enregistrer",
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password"},
+     *             @OA\Property(property="name", type="string", description="Nom de l'utilisateur"),
+     *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+     *             @OA\Property(property="password", type="string", format="password", description="Mot de passe de l'utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Utilisateur créé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", description="Message de succès"),
+     *             @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *             @OA\Property(
+     *                 property="authorization",
+     *                 type="object",
+     *                 @OA\Property(property="token", type="string", description="Token JWT"),
+     *                 @OA\Property(property="type", type="string", description="Type de token")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function register(Request $request)
     {
@@ -91,9 +154,20 @@ class AuthController extends Controller
     }
 
     /**
-     * Méthode pour la déconnexion des utilisateurs
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/logout",
+     *     operationId="logoutUser",
+     *     tags={"Authentification"},
+     *     summary="Déconnexion des utilisateurs",
+     *     description="Déconnecte l'utilisateur et invalide le token JWT.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Déconnexion réussie",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", description="Utilisateur déconnecté avec succès")
+     *         )
+     *     )
+     * )
      */
     public function logout()
     {
@@ -104,15 +178,43 @@ class AuthController extends Controller
     }
 
     /**
-     * Méthode pour rafraîchir le token d'authentification
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/refresh",
+     *     operationId="refreshToken",
+     *     tags={"Authentification"},
+     *     summary="Rafraîchissement du token JWT",
+     *     description="Rafraîchit le token JWT de l'utilisateur et renvoie un nouveau token.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *         required=true,
+     *         description="Token JWT nécessaire pour l'authentification",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="bearer token"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Token rafraîchi",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *             @OA\Property(
+     *                 property="authorization",
+     *                 type="object",
+     *                 @OA\Property(property="token", type="string", description="Nouveau token JWT"),
+     *                 @OA\Property(property="type", type="string", description="Type de token")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function refresh()
     {
         return response()->json([
             'user' => Auth::user(),
-            'authorisation' => [
+            'authorization' => [
                 'token' => Auth::refresh(),
                 'type' => 'bearer',
             ]

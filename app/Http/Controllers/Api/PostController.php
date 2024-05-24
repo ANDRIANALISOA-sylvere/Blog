@@ -12,9 +12,27 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
     /**
-     * Récupère tous les posts avec leurs catégories, tags et utilisateur associés
+     * Récupère tous les posts avec leurs catégories, tags et utilisateur associés.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *     path="/api/posts",
+     *     operationId="getAllPosts",
+     *     tags={"Posts"},
+     *     summary="Récupère la liste de tous les posts",
+     *     description="Retourne une liste de tous les posts avec leurs détails",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(
+     *            type="array",
+     *            @OA\Items(ref="#/components/schemas/Post")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     public function getAllPosts()
     {
@@ -28,10 +46,32 @@ class PostController extends Controller
     }
 
     /**
-     * Crée un nouveau post avec validation des données
+     * Crée un nouveau post avec validation des données.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Post(
+     *     path="/api/posts",
+     *     operationId="createPost",
+     *     tags={"Posts"},
+     *     summary="Crée un nouveau post",
+     *     description="Enregistre un nouveau post avec les données fournies après validation.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données du nouveau post",
+     *         @OA\JsonContent(ref="#/components/schemas/Post")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Post créé",
+     *         @OA\JsonContent(ref="#/components/schemas/Post")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     function createPost(Request $request)
     {
@@ -93,10 +133,36 @@ class PostController extends Controller
     }
 
     /**
-     * Récupère un post par son ID avec ses catégories, tags et utilisateur associés
+     * Récupère un post par son ID avec ses catégories, tags et utilisateur associés.
      *
      * @param \App\Models\Post $post
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/posts/{id}",
+     *     operationId="getPostById",
+     *     tags={"Posts"},
+     *     summary="Récupère un post par son ID",
+     *     description="Retourne un post et ses relations (catégories, tags, utilisateur) par son ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du post",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(ref="#/components/schemas/Post")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     public function getPostById(Post $post)
     {
@@ -108,11 +174,40 @@ class PostController extends Controller
         }
     }
 
-     /**
-     * Récupére les catégories d'un post spécifique
+    /**
+     * Récupère les catégories d'un post spécifique.
      *
      * @param Post $post
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/posts/{id}/categories",
+     *     operationId="getPostCategories",
+     *     tags={"Posts"},
+     *     summary="Récupère les catégories d'un post",
+     *     description="Retourne les catégories associées à un post spécifique.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du post",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(
+     *            type="array",
+     *            @OA\Items(ref="#/components/schemas/Category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     public function getPostCategories(Post $post)
     {
@@ -124,27 +219,86 @@ class PostController extends Controller
     }
 
     /**
-     * Récupere les tags d'un post spécifique
+     * Récupère les tags d'un post spécifique.
      *
      * @param Post $post
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/posts/{id}/tags",
+     *     operationId="getPostTags",
+     *     tags={"Posts"},
+     *     summary="Récupère les tags d'un post",
+     *     description="Retourne les tags associés à un post spécifique.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du post",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(
+     *            type="array",
+     *            @OA\Items(ref="#/components/schemas/Tag")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
-
-     public function getPostTags(Post $post)
-     {
-         try {
-             return response()->json($post->load('tags'), 200);
-         } catch (\Exception $e) {
-             return response()->json(['error' => 'Erreur lors de la récupération des tags du post', 'details' => $e->getMessage()], 500);
-         }
-     }
+    public function getPostTags(Post $post)
+    {
+        try {
+            return response()->json($post->load('tags'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des tags du post', 'details' => $e->getMessage()], 500);
+        }
+    }
 
     /**
-     * Met à jour un post existant avec validation des données
+     * Met à jour un post existant avec validation des données.
      *
      * @param \App\Models\Post $post
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Put(
+     *     path="/api/posts/{id}",
+     *     operationId="updatePost",
+     *     tags={"Posts"},
+     *     summary="Met à jour un post existant",
+     *     description="Met à jour un post existant avec les données fournies après validation.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du post",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données mises à jour du post",
+     *         @OA\JsonContent(ref="#/components/schemas/Post")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mise à jour réussie",
+     *         @OA\JsonContent(ref="#/components/schemas/Post")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     public function updatePost(Post $post, Request $request)
     {
@@ -202,10 +356,41 @@ class PostController extends Controller
     }
 
     /**
-     * Supprime un post et renvoie un message de succès
+     * Supprime un post et renvoie un message de succès.
      *
      * @param \App\Models\Post $post
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Delete(
+     *     path="/api/posts/{id}",
+     *     operationId="deletePost",
+     *     tags={"Posts"},
+     *     summary="Supprime un post",
+     *     description="Supprime un post spécifié par son ID et renvoie un message de succès.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du post",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Post supprimé avec succès",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             properties={
+     *                 @OA\Property(property="message", type="string", example="Le post a été supprimé avec succès")
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      */
     public function deletePost(Post $post)
     {

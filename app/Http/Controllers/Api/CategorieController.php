@@ -10,12 +10,36 @@ use Illuminate\Support\Str;
 
 /**
  * Contrôleur pour la gestion des catégories
+ *
+ * @OA\Tag(
+ *     name="Catégories",
+ *     description="Opérations sur les catégories"
+ * )
  */
 class CategorieController extends Controller
 {
     /**
      * Récupère toutes les catégories avec leurs posts associés
      *
+     * @OA\Get(
+     *     path="/api/categories",
+     *     operationId="getAllCategories",
+     *     tags={"Catégories"},
+     *     summary="Récupère toutes les catégories",
+     *     description="Retourne une liste de toutes les catégories avec leurs posts associés.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(
+     *            type="array",
+     *            @OA\Items(ref="#/components/schemas/Category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAllCategories()
@@ -31,6 +55,30 @@ class CategorieController extends Controller
     /**
      * Crée une nouvelle catégorie avec validation des données
      *
+     * @OA\Post(
+     *     path="/api/categories",
+     *     operationId="createCategorie",
+     *     tags={"Catégories"},
+     *     summary="Crée une nouvelle catégorie",
+     *     description="Enregistre une nouvelle catégorie avec les données fournies après validation.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données de la nouvelle catégorie",
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", description="Nom de la catégorie")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Catégorie créée",
+     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -54,6 +102,29 @@ class CategorieController extends Controller
     /**
      * Récupère une catégorie par son ID avec ses posts associés
      *
+     * @OA\Get(
+     *     path="/api/categories/{id}",
+     *     operationId="getCategorieById",
+     *     tags={"Catégories"},
+     *     summary="Récupère une catégorie par son ID",
+     *     description="Retourne une catégorie et ses posts associés par son ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @param Categorie $categorie
      * @return \Illuminate\Http\JsonResponse
      */
@@ -69,6 +140,37 @@ class CategorieController extends Controller
     /**
      * Met à jour une catégorie existante avec validation des données
      *
+     * @OA\Put(
+     *     path="/api/categories/{id}",
+     *     operationId="updateCategorie",
+     *     tags={"Catégories"},
+     *     summary="Met à jour une catégorie",
+     *     description="Met à jour une catégorie existante avec les données fournies après validation.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie à mettre à jour",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données mises à jour de la catégorie",
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", description="Nom de la catégorie")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Catégorie mise à jour",
+     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @param Categorie $categorie
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -94,6 +196,32 @@ class CategorieController extends Controller
     /**
      * Récupère tous les posts d'une catégorie spécifique
      *
+     * @OA\Get(
+     *     path="/api/categories/{id}/posts",
+     *     operationId="getCategoryPosts",
+     *     tags={"Catégories"},
+     *     summary="Récupère tous les posts d'une catégorie",
+     *     description="Retourne tous les posts associés à une catégorie spécifique.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Opération réussie",
+     *         @OA\JsonContent(
+     *            type="array",
+     *            @OA\Items(ref="#/components/schemas/Post")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @param Categorie $categorie
      * @return \Illuminate\Http\JsonResponse
      */
@@ -109,6 +237,31 @@ class CategorieController extends Controller
     /**
      * Supprime une catégorie et renvoie un message de succès
      *
+     * @OA\Delete(
+     *     path="/api/categories/{id}",
+     *     operationId="deleteCategorie",
+     *     tags={"Catégories"},
+     *     summary="Supprime une catégorie",
+     *     description="Supprime une catégorie et renvoie un message de succès.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie à supprimer",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Catégorie supprimée",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", description="Message de succès")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur serveur"
+     *     )
+     * )
      * @param Categorie $categorie
      * @return \Illuminate\Http\JsonResponse
      */

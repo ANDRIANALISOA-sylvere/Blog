@@ -14,7 +14,7 @@
     @vite('resources/css/app.css')
 </head>
 
-<body>
+<body class="m-2">
     @yield('body')
 </body>
 

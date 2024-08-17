@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index(): View
     {
-        $post = Post::with('users', 'category')->get();
+        $post = Post::with('users', 'category')->paginate(10);
 
         return View('home.home', [
             "posts" => $post

@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index(): View
     {
-        $post = Post::with('users', 'category')->paginate(10);
+        $post = Post::paginate(5);
 
         return View('home.home', [
             "posts" => $post
@@ -35,7 +35,14 @@ class PostController extends Controller
         }
     }
 
-    public function showpostbyId(Post $post) {}
+    public function showpost(String $slug): View
+    {
+        $post = Post::where("slug",$slug)->firstOrFail();
+
+        return view('post', [
+            "post" => $post
+        ]);
+    }
 
     public function updatePost(Request $request, Post $post)
     {

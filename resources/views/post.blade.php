@@ -23,7 +23,7 @@
                         class="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-sm text-blue-700">{{ $tag->name }}</span>
                 @endforeach
                 <p class="mt-5 mb-5 text-sm/relaxed text-gray-700">
-                    {{ $post->content }}
+                    {!! nl2br(e($post->content)) !!}
                 </p>
             </div>
         </div>

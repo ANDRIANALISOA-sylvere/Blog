@@ -20,7 +20,7 @@
                     <div class="flex flex-1 flex-col justify-between">
                         <div class="sm:p-6">
                             <span class="font-bold underline text-orange-500 capitalize">{{ $post->category->name }}</span>
-                            <a href="{{route('postbyid',['slug'=> $post->slug])}}">
+                            <a href="{{route('postbyid',['post'=> $post])}}">
                                 <h3 class="font-bold text-2xl text-gray-900">
                                     {{ $post->title }}
                                 </h3>
@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="sm:flex sm:items-end sm:justify-end">
-                            <a href="{{ route('postbyid', ['slug' => $post->slug]) }}"
+                            <a href="{{ route('postbyid', ['post' => $post]) }}"
                                 class="block bg-green-500 px-5 py-3 text-center text-xs font-bold uppercase text-gray-900 transition hover:bg-green-700">
                                 Lire l'article
                             </a>
@@ -50,7 +50,7 @@
         <p>Aucune poste pour le moment</p>
     @endforelse
 
-    <div class="mt-8 mb-5 flex justify-center items-center">
+    <div class="m-16">
         {{ $posts->links('pagination::tailwind') }}
     </div>
 @endsection

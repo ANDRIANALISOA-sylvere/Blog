@@ -35,10 +35,8 @@ class PostController extends Controller
         }
     }
 
-    public function showpost(String $slug): View
+    public function showpost(Post $post): View
     {
-        $post = Post::where("slug",$slug)->firstOrFail();
-
         return view('post', [
             "post" => $post
         ]);
